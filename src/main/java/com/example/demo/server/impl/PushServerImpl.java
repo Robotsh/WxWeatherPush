@@ -1,7 +1,6 @@
 package com.example.demo.server.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.config.WechatConfig;
 import com.example.demo.domain.MsgBody;
@@ -20,6 +19,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+
+/**
+ *
+ * @author 程序员小R
+ * @date 2022/8/24 16:17
+ */
 @Component
 @Slf4j
 public class PushServerImpl implements PushServer {
@@ -59,11 +64,11 @@ public class PushServerImpl implements PushServer {
                 //天气
                 .weather(TemplateMsg.builder().value(weather.getWeather()).color("#00FFFF").build())
                 //当前温度
-                .nowTem(TemplateMsg.builder().value(weather.getTemp() + "°C").color("#EE212D").build())
+                .nowTem(TemplateMsg.builder().value(weather.getReal() + "°C").color("#EE212D").build())
                 //最高温度
-                .highTem(TemplateMsg.builder().value(weather.getHigh() + "°C").color("#173177").build())
+                .highTem(TemplateMsg.builder().value(weather.getHighest() + "°C").color("#173177").build())
                 //最低温度
-                .lowTem(TemplateMsg.builder().value(weather.getLow() + "°C").color("#FF6347").build())
+                .lowTem(TemplateMsg.builder().value(weather.getLowest() + "°C").color("#FF6347").build())
                 //风速
                 .wind(TemplateMsg.builder().value(weather.getWind()).color("#B95EA3").build())
                 //love 日期
@@ -99,10 +104,8 @@ public class PushServerImpl implements PushServer {
             Integer code = jsonObject.getInteger("code");
             String msg = jsonObject.getString("msg");
             log.info("url:{}", url);
-            if (code != 0) {
-                throw new Exception("调用天气失败," + msg);
-            }
-            JSONObject data = jsonObject.getJSONObject("data");
+
+            JSONObject data = jsonObject.getJSONObject("result");
             List<Weather> list = JSONObject.parseArray(data.getJSONArray("list").toJSONString(), Weather.class);
             log.info("result:{}", JSONObject.toJSONString(result));
             return list.get(0);
