@@ -9,9 +9,9 @@ on:
   pull_request:
     #只运行特定分支master
     branches: [ master ]
-  schedule:
+ # schedule:
     # 定时任务
-    - cron: 18 * * * *
+   # - cron: 18 * * * *
   workflow_dispatch:
 
 
